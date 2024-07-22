@@ -47,10 +47,4 @@ export class BlogPostService {
             throw error
         }
     }
-
-    async likedUsers(){
-        
-    }
-
-    
 }

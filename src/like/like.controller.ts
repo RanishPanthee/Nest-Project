@@ -3,6 +3,7 @@ import { LikeService } from './like.service';
 import { Request } from 'express';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Blog } from 'src/blog-post/entities/blog.entity';
+import { Users } from 'src/users/entities/user.entity';
 
 @Controller('like')
 export class LikeController {
@@ -26,5 +27,14 @@ export class LikeController {
         }
 
         return this.likeService.getLikedBlogs(userId);
+    }
+
+    @Get(':id/get-users') // Retrieve users who liked a particular blog
+    async getUsersLiked(@Param('id') blogId: number, @Req() req: Request): Promise<Users[]> {
+        if (!blogId) {
+            throw new Error('Blog ID not found in request');
+        }
+
+        return this.likeService.getUsersLiked(blogId);
     }
 }

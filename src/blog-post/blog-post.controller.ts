@@ -11,7 +11,7 @@ export class BlogPostController {
     constructor(private readonly blogPostService: BlogPostService) {}
 
     @UseGuards(JwtGuard)
-    @Post('create')
+    @Post('create') // to post a blog
     async createBlog(@Req() req:Request, @Body() createBlogDto: CreateBlogDto){
         const userId = req.user.userId;
 
@@ -20,7 +20,7 @@ export class BlogPostController {
     }
 
     @UseGuards(JwtGuard)
-    @Get('my-blogs')
+    @Get('my-blogs') // blogs written by a user
     async getMyBlogs(@Req() req): Promise<Blog[]> {
         const userId = req.user.userId;
         return this.blogPostService.findBlogsByUser(userId);

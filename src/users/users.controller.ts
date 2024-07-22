@@ -31,20 +31,16 @@ export class UsersController {
     return this.usersService.findOne(+email);
   }
 
+  @UseGuards(JwtGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
-
+  
+  @UseGuards(JwtGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
 
-  // @UseGuards(JwtGuard)
-  // @Get('my-blogs')
-  // async getMyBlogs(@Request() req): Promise<Blog[]> {
-  //   const user = req.user; // This is the authenticated user
-  //   return this.usersService.findBlogsByUser(user);
-  // }
 }

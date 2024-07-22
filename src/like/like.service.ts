@@ -58,4 +58,14 @@ export class LikeService {
     
     return blogs;
   }
+
+  async getUsersLiked(blogId: number): Promise<Users[]> {
+    const likes = await this.likesRepository.find({
+        where: { blog: { id: blogId } },
+        relations: ['user']
+    });
+    const users = likes.map(like => like.user);
+
+    return users;
+}
 }
