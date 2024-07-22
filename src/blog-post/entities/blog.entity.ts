@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, OneToMany } from "typeorm";
 import { Likes } from 'src/like/entities/like.entity';
+import { Users } from "src/users/entities/user.entity";
 
 @Entity()
 export class Blog {

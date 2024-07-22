@@ -7,11 +7,12 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ConflictException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
+import { Blog } from 'src/blog-post/entities/blog.entity';
 
 @Injectable()
 export class UsersService {
 
-  constructor( @InjectRepository(Users) private readonly userRepository: Repository<Users>){}
+  constructor( @InjectRepository(Users) private readonly userRepository: Repository<Users>, @InjectRepository(Users) private readonly blogRepository: Repository<Blog>){}
   
 
   async create(createUserDto: CreateUserDto): Promise <Users> {
@@ -60,4 +61,11 @@ export class UsersService {
     const user = await this.findOne(id); 
     await this.userRepository.remove(user);
   }
+
+  // async findBlogsByUser(user: Users): Promise<Blog[]> {
+  //   return this.blogRepository.find({
+  //     where: { author: user },
+  //     relations: ['blogs'],
+  //   });
+  // }
 }

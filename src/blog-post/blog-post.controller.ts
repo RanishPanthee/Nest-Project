@@ -1,8 +1,10 @@
-import { Body, Controller, Post, UseGuards, Req } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Req, Get } from '@nestjs/common';
 import { BlogPostService } from './blog-post.service';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Request } from 'express';
 import { CreateBlogDto } from './dto/create-blog.dto';
+import { Blog } from './entities/blog.entity';
+import { Users } from 'src/users/entities/user.entity';
 
 @Controller('blog-post')
 export class BlogPostController {
@@ -15,6 +17,13 @@ export class BlogPostController {
 
         return this.blogPostService.createBlog(createBlogDto, userId);
 
+    }
+
+    @UseGuards(JwtGuard)
+    @Get('my-blogs')
+    async getMyBlogs(@Req() req): Promise<Blog[]> {
+        const userId = req.user.userId;
+        return this.blogPostService.findBlogsByUser(userId);
     }
 
 

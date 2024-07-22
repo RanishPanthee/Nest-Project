@@ -36,5 +36,21 @@ export class BlogPostService {
         }
     }
 
+    async findBlogsByUser(userId: number): Promise<Blog[]> {
+        try {
+            const user = this.userRepository.findOne({where: {id: userId}});
+            const author = (await user).firstname + ' ' + (await user).lastname ;
+
+            return this.blogRepository.find({ where: { authorName: author } });
+            
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async likedUsers(){
+        
+    }
+
     
 }

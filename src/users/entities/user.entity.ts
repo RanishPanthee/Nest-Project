@@ -1,3 +1,4 @@
+import { Blog } from 'src/blog-post/entities/blog.entity';
 import { Likes } from 'src/like/entities/like.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
