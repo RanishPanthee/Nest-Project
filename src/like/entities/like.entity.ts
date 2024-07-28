@@ -7,10 +7,10 @@ export class Likes {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => Users, user => user.likes)
+    @ManyToOne(() => Users, user => user.likes, { onDelete: 'CASCADE' })
     user: Users;
 
-    @ManyToOne(() => Blog, blog => blog.likes)
+    @ManyToOne(() => Blog, blog => blog.likes, { onDelete: 'CASCADE' })
     blog: Blog;
 
     @CreateDateColumn()

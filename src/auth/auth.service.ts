@@ -18,13 +18,7 @@ export class AuthService {
     async login(loginDto: LoginDto) {
         const user = await this.validateUser(loginDto);
         const payload = {
-            username: user.email,
-            userId: user.id,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            sub: {
-                name: user.firstname,
-            }
+            sub: user.id
         };
 
         const jwtSecretKey = this.configService.get<string>('jwtSecretKey'); 

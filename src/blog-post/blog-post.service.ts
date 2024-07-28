@@ -1,9 +1,10 @@
-import {Injectable, NotFoundException } from '@nestjs/common';
+import {ForbiddenException, Injectable, NotFoundException, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from 'src/users/entities/user.entity';
 import { Blog } from './entities/blog.entity';
 import { CreateBlogDto } from './dto/create-blog.dto';
+import { UpdateBlogDto } from './dto/update-blog.dto';
 
 @Injectable()
 export class BlogPostService {
@@ -15,20 +16,23 @@ export class BlogPostService {
         private blogRepository: Repository<Blog>
     ) { }
 
-    async createBlog(createBlogDto: CreateBlogDto, userId: number) {
+    async createBlog(createBlogDto: CreateBlogDto, userId: number) { 
         try {
 
-            const user = this.userRepository.findOne({ where: { id: userId } });
+            const user = await this.userRepository.findOne(
+                { where: { id: userId } 
+            });
 
             if (!user) {
                 throw new NotFoundException(`User with ${userId} not found`);
             }
-            const blog = this.blogRepository.create({
+            const blog = await this.blogRepository.create({
                 ...createBlogDto,
-                authorName: (await user).firstname + ' ' + (await user).lastname
+                authorName:  `${user.firstname} ${user.lastname}`,
+                author: user
             });
 
-            return await this.blogRepository.save(blog);
+            return this.blogRepository.save(blog);
 
         } catch (error) {
             throw error
@@ -38,13 +42,68 @@ export class BlogPostService {
 
     async findBlogsByUser(userId: number): Promise<Blog[]> {
         try {
-            const user = this.userRepository.findOne({where: {id: userId}});
-            const author = (await user).firstname + ' ' + (await user).lastname ;
+            const user = await this.userRepository.findOne(
+                {where: {id: userId}
+            });
+            const author = await `${user.firstname} ${user.lastname}` ;
 
-            return this.blogRepository.find({ where: { authorName: author } });
+            return this.blogRepository.find(
+                { where: { authorName: author } 
+            });
             
         } catch (error) {
             throw error
         }
+    }
+
+    async listBlogsByCategory(blogCategory: string): Promise <Blog[]>{
+        try {
+            const blog = await this.blogRepository.find(
+                {where: {category: blogCategory}
+            })
+            return blog  
+
+        } catch (error) {
+            throw error
+            
+        }
+
+    }
+
+    async findOne(id: number): Promise<Blog> {
+        const blog = await this.blogRepository.findOne({
+            where: { id },
+            relations: ['author']
+        });
+        if (!blog) {
+            throw new NotFoundException(`Blog with ID ${id} not found`);
+        }
+
+        return blog;
+    }
+
+    async deleteBlog(blogId: number, userId: number): Promise<void> {
+        const blog = await this.findOne(blogId);
+   
+        if (!blog.author) {
+            throw new NotFoundException('Blog author not found');
+        }
+        
+        if (blog.author.id !== userId) {
+            throw new ForbiddenException('You do not have permission to delete this blog');
+        }
+
+        await this.blogRepository.remove(blog);
+    }
+
+    async updateBlog(id: number, updateBlogDto: UpdateBlogDto): Promise<Blog[]>{
+
+        return
+        // TO DO
+        // complete update blog and wrap up reefactoring
+        // implement comment
+        // implement picture upload
+        // implement role based access user or admin
+
     }
 }

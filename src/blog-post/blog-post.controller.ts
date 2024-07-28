@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards, Req, Get } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Req, Get, Param, Delete, UnauthorizedException } from '@nestjs/common';
 import { BlogPostService } from './blog-post.service';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Request } from 'express';
@@ -13,9 +13,8 @@ export class BlogPostController {
     @UseGuards(JwtGuard)
     @Post('create') // to post a blog
     async createBlog(@Req() req:Request, @Body() createBlogDto: CreateBlogDto){
-        const userId = req.user.userId;
-
-        return this.blogPostService.createBlog(createBlogDto, userId);
+        const user = req.user;
+        return this.blogPostService.createBlog(createBlogDto, user.id);
 
     }
 
@@ -25,6 +24,24 @@ export class BlogPostController {
         const userId = req.user.userId;
         return this.blogPostService.findBlogsByUser(userId);
     }
+
+    @Get(':category') //get blog by category
+    async getBlogsByCategory(@Param('category') category: string){
+        return this.blogPostService.listBlogsByCategory(category);
+    }
+
+    @UseGuards(JwtGuard)
+    @Delete('delete/:id')
+    async deleteBlog(@Param('id') id: number, @Req() req: Request) {
+        const user = req.user;
+        if (!user) {
+            throw new UnauthorizedException('User not authenticated');
+        }
+        await this.blogPostService.deleteBlog(id, user.id);
+        return { message: 'Blog deleted successfully' };
+    }
+
+
 
 
 }

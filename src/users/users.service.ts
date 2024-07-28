@@ -1,4 +1,4 @@
-import { Get, Injectable, Post } from '@nestjs/common';
+import { Injectable} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,7 +17,9 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise <Users> {
 
-    const existingUser = await this.userRepository.findOne({ where: { email: createUserDto.email } });
+    const existingUser = await this.userRepository.findOne(
+      { where: { email: createUserDto.email } 
+    });
 
     if (existingUser) {
       throw new ConflictException('Email already registered !!');
@@ -36,7 +38,9 @@ export class UsersService {
   }
 
   async findOne(id: number): Promise<Users> {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findOne(
+      { where: { id } 
+    });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
@@ -44,7 +48,9 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<Users> {
-    const user = await this.userRepository.findOne({ where: { email } });
+    const user = await this.userRepository.findOne({ 
+      where: { email }, select: ['id', 'email', 'firstname', 'lastname', 'password', 'role'] 
+    });
     if (!user) {
       throw new NotFoundException(`User with given email not found`);
     }
@@ -62,10 +68,4 @@ export class UsersService {
     await this.userRepository.remove(user);
   }
 
-  // async findBlogsByUser(user: Users): Promise<Blog[]> {
-  //   return this.blogRepository.find({
-  //     where: { author: user },
-  //     relations: ['blogs'],
-  //   });
-  // }
 }

@@ -30,4 +30,9 @@ export class Blog {
 
     @Column({ default: 0 })
     likesCount: number;
+
+    @ManyToOne(() => Users, (user) => user.blogs, { onDelete: 'CASCADE' })
+    author: Users;
+
+
 }

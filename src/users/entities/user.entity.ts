@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Blog } from 'src/blog-post/entities/blog.entity';
 import { Likes } from 'src/like/entities/like.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
@@ -21,7 +22,8 @@ export class Users {
   @Column()
   lastname: string;
 
-  @Column()
+  @Column({select: false})
+  @Exclude({ toPlainOnly: true })
   password: string;
 
   @Column({
@@ -33,4 +35,7 @@ export class Users {
 
   @OneToMany(() => Likes, like => like.user, {cascade: true, onDelete: 'CASCADE'})
   likes: Likes[];
+
+  @OneToMany(() => Blog, (blog) => blog.author, {cascade: true, onDelete: 'CASCADE'})
+  blogs: Blog[];
 }
