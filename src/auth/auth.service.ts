@@ -16,7 +16,7 @@ export class AuthService {
     }
 
     async login(loginDto: LoginDto) {
-        const user = await this.validateUser(loginDto);
+        const user = await this.validateUser(loginDto.email, loginDto.password);
         const payload = {
             sub: user.id
         };
@@ -39,9 +39,9 @@ export class AuthService {
         }
     }
 
-    async validateUser(loginDto: LoginDto) {
-        const user = await this.usersService.findByEmail(loginDto.email);
-        if (user && (await compare(loginDto.password, user.password))) {
+    async validateUser(email: string, password: string) {
+        const user = await this.usersService.findByEmail(email);
+        if (user && (await compare(password, user.password))) {
             const { password, ...result } = user;
             return result;
         } else {
