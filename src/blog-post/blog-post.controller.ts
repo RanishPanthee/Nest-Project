@@ -1,10 +1,11 @@
-import { Body, Controller, Post, UseGuards, Req, Get, Param, Delete, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Req, Get, Param, Delete, UnauthorizedException, Patch } from '@nestjs/common';
 import { BlogPostService } from './blog-post.service';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Request } from 'express';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { Blog } from './entities/blog.entity';
 import { Users } from 'src/users/entities/user.entity';
+import { UpdateBlogDto } from './dto/update-blog.dto';
 
 @Controller('blog-post')
 export class BlogPostController {
@@ -41,7 +42,15 @@ export class BlogPostController {
         return { message: 'Blog deleted successfully' };
     }
 
-
-
+    @UseGuards(JwtGuard)
+    @Patch('update/:id')
+    async updateBlog(@Param('id') id: number, @Req() req: Request, @Body() updateBlogDto: UpdateBlogDto) {
+        const user = req.user;
+        if (!user) {
+            throw new UnauthorizedException('User not authenticated');
+        }
+        await this.blogPostService.updateBlog(+id, updateBlogDto);
+        return { message: 'Blog updated successfully' };
+      }
 
 }

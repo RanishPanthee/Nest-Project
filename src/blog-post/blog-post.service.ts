@@ -96,14 +96,9 @@ export class BlogPostService {
         await this.blogRepository.remove(blog);
     }
 
-    async updateBlog(id: number, updateBlogDto: UpdateBlogDto): Promise<Blog[]>{
-
-        return
-        // TO DO
-        // complete update blog and wrap up reefactoring
-        // implement comment
-        // implement picture upload
-        // implement role based access user or admin
-
+    async updateBlog(id: number, updateBlogDto: UpdateBlogDto): Promise<Blog>{
+        await this.findOne(id);
+        await this.blogRepository.update(id, updateBlogDto);
+        return this.findOne(id)
     }
 }
