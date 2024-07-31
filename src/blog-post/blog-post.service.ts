@@ -1,42 +1,46 @@
-import {ForbiddenException, Injectable, NotFoundException, Req } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from 'src/users/entities/user.entity';
 import { Blog } from './entities/blog.entity';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class BlogPostService {
     constructor(
         @InjectRepository(Users)
         private userRepository: Repository<Users>,
-
         @InjectRepository(Blog)
-        private blogRepository: Repository<Blog>
-    ) { }
+        private blogRepository: Repository<Blog>,
+        private readonly cloudinaryService: CloudinaryService 
+    ) {}
 
-    async createBlog(createBlogDto: CreateBlogDto, userId: number) { 
+    async createBlog(createBlogDto: CreateBlogDto, userId: number, file?: Express.Multer.File) {
         try {
-
-            const user = await this.userRepository.findOne(
-                { where: { id: userId } 
-            });
+            const user = await this.userRepository.findOne({ where: { id: userId } });
 
             if (!user) {
-                throw new NotFoundException(`User with ${userId} not found`);
+                throw new NotFoundException(`User with ID ${userId} not found`);
             }
-            const blog = await this.blogRepository.create({
+
+            let imageUrl: string = null;
+            if (file) {
+                const uploadResult = await this.cloudinaryService.uploadFile(file); 
+                imageUrl = uploadResult.secure_url;
+            }
+
+            const blog = this.blogRepository.create({
                 ...createBlogDto,
-                authorName:  `${user.firstname} ${user.lastname}`,
-                author: user
+                authorName: `${user.firstname} ${user.lastname}`,
+                author: user,
+                imageUrl
             });
 
             return this.blogRepository.save(blog);
-
         } catch (error) {
-            throw error
-
+            throw error;
         }
     }
 

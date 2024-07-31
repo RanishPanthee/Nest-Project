@@ -8,9 +8,11 @@ import { UsersService } from 'src/users/users.service';
 import { UsersModule } from 'src/users/users.module';
 import { Blog } from './entities/blog.entity';
 import { Likes } from 'src/like/entities/like.entity';
+import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Blog, Likes]),UsersModule],
+  imports: [
+    TypeOrmModule.forFeature([Blog, Likes]),UsersModule, CloudinaryModule],
   controllers: [BlogPostController],
   providers: [BlogPostService, JwtGuard, JwtService, UsersService],
   exports: [BlogPostService],

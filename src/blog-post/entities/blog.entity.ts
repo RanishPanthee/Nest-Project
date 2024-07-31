@@ -34,5 +34,7 @@ export class Blog {
     @ManyToOne(() => Users, (user) => user.blogs, { onDelete: 'CASCADE' })
     author: Users;
 
+    @Column({nullable: true})
+    imageUrl: string;
 
 }

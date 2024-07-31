@@ -67,5 +67,5 @@ export class LikeService {
     const users = likes.map(like => like.user);
 
     return users;
-}
+  }
 }

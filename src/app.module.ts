@@ -7,7 +7,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { BlogPostModule } from './blog-post/blog-post.module';
 import { LikeModule } from './like/like.module';
-
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -30,7 +30,8 @@ import { LikeModule } from './like/like.module';
     UsersModule,
     AuthModule,
     BlogPostModule,
-    LikeModule
+    LikeModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

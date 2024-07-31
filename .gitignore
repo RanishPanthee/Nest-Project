@@ -73,3 +73,5 @@ jspm_packages/
 
 # JetBrains IDE files
 *.iml
+
+uploads/
