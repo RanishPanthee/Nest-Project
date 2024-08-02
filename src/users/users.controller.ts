@@ -1,9 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, UseGuards, Request } from '@nestjs/common';
+import { Controller, 
+         Get, 
+         Post, 
+         Body, 
+         Patch, 
+         Param,
+         UsePipes, 
+         ValidationPipe, 
+         UseGuards} from '@nestjs/common';
+         
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { Blog } from 'src/blog-post/entities/blog.entity';
 
 @Controller('users')
 export class UsersController {

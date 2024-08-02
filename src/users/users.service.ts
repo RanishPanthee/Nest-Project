@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { ConflictException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 import { Blog } from 'src/blog-post/entities/blog.entity';
