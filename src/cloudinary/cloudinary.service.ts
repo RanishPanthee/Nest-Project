@@ -4,7 +4,7 @@ import * as fs from 'fs';
 
 @Injectable()
 export class CloudinaryService {
-  uploadFile(file: Express.Multer.File): Promise<UploadApiResponse> { // Correct return type
+  uploadFile(file: Express.Multer.File): Promise<UploadApiResponse> { 
     return new Promise<UploadApiResponse>((resolve, reject) => {
       const upload = v2.uploader.upload_stream(
         { folder: 'Blog Images' },
